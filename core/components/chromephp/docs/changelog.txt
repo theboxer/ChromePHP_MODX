@@ -1,6 +1,12 @@
 Changelog for ChromePHP.
 
-`
+ChromePHP 1.0.0
+==============
+    - info, group, groupEnd, groupCollapsed functions
+    - Log, warn, error functions
+    - xPDO objects automatically transformed to arrays
+
 ChromePHP 0.0.1
 ==============
-- Initial release.
+    - Initial release.
+    - Injected ChromePhp 4.0.0

@@ -58,7 +58,6 @@ unset($root);
 /* override with your own defines here (see build.config.sample.php) */
 require_once $sources['build'] . '/build.config.php';
 require_once MODX_CORE_PATH . 'model/modx/modx.class.php';
-require_once $sources['build'] . '/includes/functions.php';
 
 $modx= new modX();
 $modx->initialize('mgr');
@@ -77,62 +76,23 @@ $category= $modx->newObject('modCategory');
 $category->set('id',1);
 $category->set('category',PKG_NAME);
 
-/* add snippets */
-$snippets = include $sources['data'].'transport.snippets.php';
-if (!is_array($snippets)) {
-    $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in snippets.');
-} else {
-    $category->addMany($snippets);
-    $modx->log(modX::LOG_LEVEL_INFO,'Packaged in '.count($snippets).' snippets.');
-}
-
 /* create category vehicle */
 $attr = array(
     xPDOTransport::UNIQUE_KEY => 'category',
     xPDOTransport::PRESERVE_KEYS => false,
     xPDOTransport::UPDATE_OBJECT => true,
-    xPDOTransport::RELATED_OBJECTS => true,
-    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-        'Children' => array(
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'category',
-            xPDOTransport::RELATED_OBJECTS => true,
-            xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-                'Snippets' => array(
-                    xPDOTransport::PRESERVE_KEYS => false,
-                    xPDOTransport::UPDATE_OBJECT => true,
-                    xPDOTransport::UNIQUE_KEY => 'name',
-                ),
-                'Chunks' => array(
-                    xPDOTransport::PRESERVE_KEYS => false,
-                    xPDOTransport::UPDATE_OBJECT => true,
-                    xPDOTransport::UNIQUE_KEY => 'name',
-                ),
-            ),
-        ),
-        'Snippets' => array(
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'name',
-        ),
-        'Chunks' => array (
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'name',
-        ),
-    ),
+    xPDOTransport::RELATED_OBJECTS => false,
 );
 $vehicle = $builder->createVehicle($category,$attr);
 
 $modx->log(modX::LOG_LEVEL_INFO,'Adding file resolvers to category...');
 $vehicle->resolve('file',array(
-    'source' => $sources['source_assets'],
-    'target' => "return MODX_ASSETS_PATH . 'components/';",
-));
-$vehicle->resolve('file',array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",
+));
+
+$vehicle->resolve('php',array(
+     'source' => $sources['resolvers'] . 'extension_package.resolver.php',
 ));
 $builder->putVehicle($vehicle);
 
@@ -154,40 +114,13 @@ if (!is_array($settings)) {
 }
 unset($settings,$setting,$attributes);
 
-/* load menu */
-$menu = include $sources['data'].'transport.menu.php';
-if (empty($menu)) {
-    $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in menu.');
-} else {
-    $vehicle= $builder->createVehicle($menu,array (
-        xPDOTransport::PRESERVE_KEYS => true,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::UNIQUE_KEY => 'text',
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-            'Action' => array (
-                xPDOTransport::PRESERVE_KEYS => false,
-                xPDOTransport::UPDATE_OBJECT => true,
-                xPDOTransport::UNIQUE_KEY => array ('namespace','controller'),
-            ),
-        ),
-    ));
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in PHP resolvers...');
-    $vehicle->resolve('php',array(
-        'source' => $sources['resolvers'] . 'resolve.tables.php',
-    ));
-    $vehicle->resolve('php',array(
-        'source' => $sources['resolvers'] . 'resolve.paths.php',
-    ));
-    $builder->putVehicle($vehicle);
-    $modx->log(modX::LOG_LEVEL_INFO,'Packaged in menu.');
-}
-unset($vehicle,$menu);
+unset($vehicle);
 
 /* now pack in the license file, readme and setup options */
 $builder->setPackageAttributes(array(
     'license' => file_get_contents($sources['docs'] . 'license.txt'),
     'readme' => file_get_contents($sources['docs'] . 'readme.txt'),
+    'changelog' => file_get_contents($sources['docs'] . 'changelog.txt'),
     //'setup-options' => array(
         //'source' => $sources['build'].'setup.options.php',
     //),

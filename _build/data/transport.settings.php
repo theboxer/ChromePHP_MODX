@@ -28,12 +28,12 @@
 $settings = array();
 
 /*
-$settings['gallery.']= $modx->newObject('modSystemSetting');
-$settings['gallery.']->fromArray(array(
-    'key' => 'gallery.',
+$settings['chromephp.']= $modx->newObject('modSystemSetting');
+$settings['chromephp.']->fromArray(array(
+    'key' => 'chromephp.',
     'value' => '',
     'xtype' => 'textfield',
-    'namespace' => 'gallery',
+    'namespace' => 'chromephp',
     'area' => '',
 ),'',true,true);
 */
