@@ -1,0 +1,6 @@
+Changelog for ChromePHP.
+
+`
+ChromePHP 0.0.1
+==============
+- Initial release.
