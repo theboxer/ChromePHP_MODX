@@ -1,0 +1,11 @@
+{
+    "name": "ChromePHP"
+    ,"lowCaseName": "chromephp"
+    ,"description": "Allows you to log things from manager to Chrome Console."
+    ,"author": "Jan Peca (TheBoxer)"
+    ,"version": "1.0.0"
+    ,"extensionPackage": {
+        "serviceName": "chromephp"
+        ,"serviceClass": "ChromePHP_MODX"
+    }
+}
