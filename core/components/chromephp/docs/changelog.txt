@@ -1,5 +1,10 @@
 Changelog for ChromePHP.
 
+ChromePHP 1.1.0
+==============
+    - Updated chromephp to version 4.1.0
+    - Added table method for console.table
+
 ChromePHP 1.0.0
 ==============
     - info, group, groupEnd, groupCollapsed functions
