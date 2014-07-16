@@ -83,4 +83,14 @@ class ChromePHP_MODX {
         call_user_func_array('ChromePhp::info', $args);
     }
 
+    public function table(){
+        $args = func_get_args();
+        foreach($args as &$arg){
+            if ($arg instanceof xPDOObject) {
+                $arg = $arg->toArray();
+            }
+        }
+        call_user_func_array('ChromePhp::table', $args);
+    }
+
 }
