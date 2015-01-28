@@ -3,7 +3,7 @@
     ,"lowCaseName": "chromephp"
     ,"description": "Allows you to log things from manager to Chrome Console."
     ,"author": "Jan Peca (TheBoxer)"
-    ,"version": "1.0.0"
+    ,"version": "1.1.0"
     ,"extensionPackage": {
         "serviceName": "chromephp"
         ,"serviceClass": "ChromePHP_MODX"
